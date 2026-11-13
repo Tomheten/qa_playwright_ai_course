@@ -68,7 +68,13 @@ test('Анна входит как покупатель и не видит ад�
   await page.getByTestId('password-input').fill('anna-pass');
   await page.getByTestId('login-submit').click();
 
-  await expect(page).toHaveURL(/\/catalog/);
+  // правильный способ: конкретный триггер - это появление ожидаемого элемента,
+  //в данном способе ориентируемся на url 
+  // await expect(page).toHaveURL(/\/catalog/);
+
+  // не оптимальный способ. В данном случае задержка времени сработает, но это не надежно- 
+  // мы гадаем, а не ждем конкретное событие
+  await page.waitForTimeout(3000);
   await expect(page.getByTestId('role-badge')).toHaveText(/user/i);
   await expect(page.getByTestId('nav-admin-products')).toHaveCount(0);
   await expect(page.getByTestId('app-error')).toBeHidden();
@@ -100,7 +106,6 @@ await expect(page.getByTestId('app-error')).toHaveCount(0);
 - после входа проверяется каталог;
 - проверяется бейдж роли;
 - проверяется отсутствие админ-пункта;
-- нет `waitForTimeout`;
 - тест читается как простой пользовательский сценарий.
 
 ### Анти-паттерны
@@ -129,4 +134,3 @@ await expect(page).toHaveURL(/\/catalog/);
 - [Playwright Assertions](https://playwright.dev/docs/test-assertions)
 - [Playwright Actionability](https://playwright.dev/docs/actionability)
 - [Playwright Best Practices](https://playwright.dev/docs/best-practices)
-
